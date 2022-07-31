@@ -23,7 +23,7 @@ sock.bind((host_address, host_port))
 def handle_clients(conn, address):
     connected_client_name = conn.recv(1024).decode()
     greeting = f"Welcome {connected_client_name}. You can type #quit if you ever wannt to leave the Chat Room"
-    conn.recv(bytes(greeting, "utf8"))
+    conn.send(bytes(greeting, "utf8"))
     msg = f"{connected_client_name} has recently joined the Chat Room"
     broadcast(bytes(msg, "utf8"))
     clients_connected[conn] = connected_client_name
@@ -36,7 +36,7 @@ def handle_clients(conn, address):
             conn.send(bytes("#quit", "utf8"))
             conn.close()
             del clients_connected[conn]
-            broadcast(bytes(f"{connected_client_name} has left the Chat Room"))
+            broadcast(bytes(f"{connected_client_name} has left the Chat Room", "utf8"))
 
 
 def accept_client_connections():
